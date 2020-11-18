@@ -1,0 +1,10 @@
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\bin\Debug\DPT_copyHistory.exe.config
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\bin\Debug\DPT_copyHistory.exe
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\bin\Debug\DPT_copyHistory.pdb
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\obj\Debug\DPT_copyHistory.csprojAssemblyReference.cache
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\obj\Debug\DPT_copyHistory.Form1.resources
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\obj\Debug\DPT_copyHistory.Properties.Resources.resources
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\obj\Debug\DPT_copyHistory.csproj.GenerateResource.cache
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\obj\Debug\DPT_copyHistory.csproj.CoreCompileInputs.cache
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\obj\Debug\DPT_copyHistory.exe
+F:\1. Project\11. DPT_History\DPT_copyHistory\DPT_copyHistory\obj\Debug\DPT_copyHistory.pdb
