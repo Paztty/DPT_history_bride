@@ -22,7 +22,6 @@ namespace DPT_copyHistory
 
         public string DPTpath, MESpath;
         public DateTime now;
-        private bool breakThread = false;
         string buffer;
         private void button2_Click(object sender, EventArgs e)
         {
@@ -40,8 +39,8 @@ namespace DPT_copyHistory
         private void button1_Click(object sender, EventArgs e)
         {
             if (!Directory.Exists(@"C:\DEV_PJT\DPT_MES_BRIDE\")) Directory.CreateDirectory(@"C:\DEV_PJT\DPT_MES_BRIDE\");
-            string config = DPTpath + Environment.NewLine + MESpath;
-            File.WriteAllText(@"C:\DEV_PJT\DPT_MES_BRIDE\config.cfg", config);
+            string config = DPTpath + Environment.NewLine + MESpath + Environment.NewLine + numericUpDown1.Value.ToString();
+            File.WriteAllText(@"C:\DEV_PJT\DPT_MES_BRIDE\configs.cfg", config);
 
 
             notifyIcon.Visible = true;
@@ -49,13 +48,7 @@ namespace DPT_copyHistory
             string folderResult = now.ToString("yyyyMM");
             textBox2.Text = DPTpath;
             textBox1.Text = MESpath;
-
-            if (notifyIcon.Visible)
-            {
-                Thread thread = new Thread(copyFile);
-                thread.Start();
-            }
-
+            timer1.Start();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -68,14 +61,15 @@ namespace DPT_copyHistory
         {
             if (!File.Exists(@"C:\DEV_PJT\DPT_MES_BRIDE\" + "buffer.txt"))
                 File.WriteAllText(@"C:\DEV_PJT\DPT_MES_BRIDE\" + "buffer.txt", buffer);
-               else
+            else
                 buffer = File.ReadAllText(@"C:\DEV_PJT\DPT_MES_BRIDE\" + "buffer.txt");
 
-            if (File.Exists(@"C:\DEV_PJT\DPT_MES_BRIDE\" + "config.cfg"))
+            if (File.Exists(@"C:\DEV_PJT\DPT_MES_BRIDE\" + "configs.cfg"))
             {
-                string[] config = File.ReadAllLines(@"C:\DEV_PJT\DPT_MES_BRIDE\" + "config.cfg");
+                string[] config = File.ReadAllLines(@"C:\DEV_PJT\DPT_MES_BRIDE\" + "configs.cfg");
                 DPTpath = config[0];
                 MESpath = config[1];
+                numericUpDown1.Value = Convert.ToInt32(config[2]);
                 textBox2.Text = DPTpath;
                 textBox1.Text = MESpath;
             }
@@ -83,25 +77,20 @@ namespace DPT_copyHistory
 
         public void copyFile()
         {
-            while (true)
+            now = DateTime.Now;
+            string folderResult = now.ToString("yyyyMM");
+            string fileResult = now.ToString("yyyyMMdd");
+
+            if (!Directory.Exists(MESpath + @"\" + folderResult)) Directory.CreateDirectory(MESpath);
+
+            if (!File.Exists(MESpath + @"\" + fileResult + ".rlt"))
             {
-                if (!notifyIcon.Visible)
+                if (Directory.Exists(DPTpath + @"\" + folderResult))
                 {
-                    break;
-                }
-                now = DateTime.Now;
-                string folderResult = now.ToString("yyyyMM");
-                string fileResult = now.ToString("yyyyMMdd");
-
-                if (!Directory.Exists(MESpath + @"\" + folderResult)) Directory.CreateDirectory(MESpath);
-
-                if (!File.Exists(MESpath + @"\" + fileResult + ".rlt"))
-                {
-                    if (Directory.Exists(DPTpath + @"\" + folderResult))
+                    Console.WriteLine(DPTpath + @"\" + folderResult);
+                    foreach (string f in Directory.GetFiles(DPTpath + @"\" + folderResult, "*.rlt"))
                     {
-                        Console.WriteLine(DPTpath + @"\" + folderResult);
-                        foreach (string f in Directory.GetFiles(DPTpath + @"\" + folderResult, "*.rlt"))
-                        {
+                        if (f.Contains(fileResult)){
                             string extension = Path.GetExtension(f);
                             if (extension != null && (extension.Equals(".rlt")))
                             {
@@ -117,7 +106,7 @@ namespace DPT_copyHistory
                                         newdata = alldata;
                                     buffer = alldata;
 
-                                    if(newdata.Length > 0)
+                                    if (newdata.Length > 0)
                                         File.WriteAllText(MESpath + @"\" + fileInfo.Name, newdata);
                                     File.WriteAllText(@"C:\DEV_PJT\DPT_MES_BRIDE\" + "buffer.txt", alldata);
                                 }
@@ -125,14 +114,17 @@ namespace DPT_copyHistory
                         }
                     }
                 }
-                Thread.Sleep((int)numericUpDown1.Value * 1000);
             }
-            notifyIcon.Visible = false;
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
+            timer1.Interval = (int)numericUpDown1.Value * 1000;
+        }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            copyFile();
         }
 
         protected virtual bool IsFileLocked(FileInfo file)
